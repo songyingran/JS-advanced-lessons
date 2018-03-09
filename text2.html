@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>text2</title>
+    <script>
+    	//基本数据类型检测typeof
+		console.log(typeof true);//boolean
+		console.log(typeof "abc");//string
+		//引用对象类型检测instanceof
+		var a = {name:"Mike",age:20};
+		console.log(a instanceof Object);//true
+		//原始数据类型和引用对象类型的内存分配
+		function f(){
+			var str = "Hello World";//存在栈区
+			var obj = { value: "Hello World"};//存在堆区
+			//特列
+			var obj2 = {a:12,b:{c:"ab"}};//a是原始数据类型，存在堆区
+		}
+		//原始数据类型和引用对象类型的赋值的不同
+		var str_a = "a";
+		var str_b = str_a;
+		str_b = "b";
+		console.log(str_a,str_b);//a b
+
+		var obj_a = {v:"a"};
+		var obj_b = obj_a;
+		obj_b.v = "b";
+		console.log(obj_a,obj_b);// v:"b" v:"b"
+		//判等的不同
+		var a = 100;
+		var b = 100;
+		console.log(a == b);//true
+		console.log(a === b);//true
+
+		var c = [1,2];
+		var d = [1,2];
+		console.log(c == d);//false
+		console.log(c === d);//false
+		d = c;
+		console.log(c ===d);//true
+
+		var m = 123;
+		var n = new Number(123);
+		console.log(m === n);//false
+		console.log(m == n);//true  解释：做隐式类型转换，引用对象类型转换为基本数据类型
+    </script>
+</head>
+<body>
+
+</body>
+</html>
