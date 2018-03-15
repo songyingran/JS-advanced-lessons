@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>text2</title>
+    <script>
+    	console.log({x:1} == {x:1});//false
+    	console.log(NaN == NaN);//false
+    	//字符串常见的操作
+    	var str = "abc_def_ghi_jkl_mn";
+    	str.split("_");//["abc", "def", "ghi", "jkl", "mn"]
+		str.split("_",2);//["abc", "def"]
+		str.concat("_opq");
+		str.substr(4,7);//"def_ghi"
+		str.substring(4,7);//"def"
+		str.slice(2);//"c_def_ghi_jkl_mn"
+		str.slice(2,5);//"c_d"
+		str.slice(-2);//"mn"
+		str.slice(2,-2);//"c_def_ghi_jkl_"
+		//注意null
+		console.log(typeof null);//object
+		//包装对象：数字、布尔、字符串等基本数据类型都有对应的包装对象类型，可以将其包装成对象
+		//原始数据类型装箱
+		var str = "abcdef";
+		str.length = 1;
+		console.log(str,str.length);//abcdef  6
+		//解释：原始数据类型装箱操作完成后，自动拆箱，恢复到原始数据类型
+		//引用对象类型
+		var arr = [1,2,3,4,5];
+		arr.length = 1;
+		console.log(arr,arr.length);//[1]  1
+		//解释：引用对象类型本来就是对象，不需要进行装箱拆箱操作
+
+
+		//数据类型转换
+		//Boolean
+		console.log(Boolean(undefined));//false
+		console.log(Boolean(null));//false
+		console.log(Boolean(true));//true
+		console.log(Boolean(0));//false
+		console.log(Boolean(NaN));//false
+		console.log(Boolean(1));//true
+		console.log(Boolean(""));//false
+		console.log(Boolean("a"));//true
+		console.log(Boolean({}));//true
+		console.log(0?true:false);//false
+		console.log(!!0);//false
+		//Number
+		console.log(Number(undefined));//NaN
+		console.log(Number(null));//0
+		console.log(Number(false));//0
+		console.log(Number(true));//1
+		console.log(Number(0));//0
+		console.log(Number(""));//0
+		console.log(Number('3.14'));//3.14
+		console.log(Number('3a.14'));//NaN
+		console.log(Number({}));//NaN
+		console.log(+null);//0
+		console.log(parseFloat('3.14'));//3.14
+		console.log(parseFloat(false));//NaN
+		console.log(parseInt(false));//NaN
+		//String
+		console.log(String(undefined));//'undefined'
+		console.log(String(null));//'null'
+		console.log(String(false));//'false'
+		console.log(String(true));//'true'
+		console.log(String(3.14));//'3.14'
+		console.log(String('abc'));//'abc'
+
+		//隐式类型转换
+		/*
+		1.使用关系运算符时的转换
+		2.使用算数运算符时的转换
+		3.使用逻辑运算符时的转换
+		4.执行流程语句时的转换
+		*/
+		console.log(1 == 1);//true
+		console.log(!!0);//false
+
+		//显示类型转换
+		/*
+		1.Boolean()、Number()、String()、Object()
+		2.数转换为字符串(toString()、toFixed()、toPrecision()、toExponential())
+		3.字符串转为数字(parsenInt()、parseFloat())
+		4.对象转换为原始值(toString()、valueOf())
+		*/
+
+		//Number
+		/*
+		Number原型方法
+		Number.prototype.toFixed()   小数点后面取几位
+		Number.prototype.toPrecision()  指数或定点计数法来表示该数
+		Number.prototype.toString()  将逻辑值转化为字符串
+		Number.prototype.toExponential()  把对象的值转化成指数计数法
+		*/
+		var n = 314.15926;
+		console.log(n.toFixed(2));//314.16
+		console.log(n.toPrecision(2));//3.1e+2
+		console.log(n.toString());//314.15926
+		console.log(n.toExponential(2));//3.14e+2
+
+		//String
+		/*
+		1.字符串比较
+		2.字符串连接
+		3.字符串提取
+		*/
+		console.log("A" > "a");//false
+		var a = "abc";
+		var b = "def";
+		var c = a+b;
+		console.log(c);//abcdef
+
+		//Boolean
+		console.log(Boolean({}));//true
+		console.log(Boolean([]));//true
+		console.log(Boolean(new Boolean(false)));//true
+		console.log(Boolean(function foo(){}));//true
+		
+    </script>
+</head>
+<body>
+
+</body>
+</html>
