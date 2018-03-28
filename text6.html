@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>text6</title>
+	<script type="text/javascript">
+		var a = new Array(5);
+		console.log(a);//创建了一个含有五个为空的元素的数组
+		var b = new Array("5");
+		console.log(b);//创建了含有一个元素5的数组
+
+		//JS中的函数也是对象
+		function foo(){}
+		console.log(foo);//function foo(){}
+		console.log(typeof foo);//function
+		console.log(foo instanceof Object);//true
+		console.log(foo instanceof Function);//true
+		console.log(foo === window.foo);//true
+
+		console.log(typeof new Function());//function
+		console.log(typeof new Array());//object
+		console.log(typeof new Date());//object
+		console.log(typeof new new Function());//object
+		//console.log(typeof new new new Function());//报错
+
+		console.log(Function instanceof Function);//true
+		console.log(Function instanceof Object);//true
+		console.log(Array instanceof Function);//true
+		console.log(Array instanceof Object);//true
+		console.log(Date instanceof Function);//true
+		console.log(Date instanceof Object);//true
+		console.log(Math instanceof Function);//false
+		console.log(Math instanceof Object);//true
+		console.log(JSON instanceof Function);//false
+		console.log(JSON instanceof Object);//true
+
+		//定义的函数的类型是Function也是Object，用这个函数创建的对象的类型只是Object
+		var person = function(){}
+		console.log(person instanceof Function);//true
+		console.log(person instanceof Object);//true
+		var p = new person;
+		console.log(p instanceof Function);//false
+		console.log(p instanceof Object);//true
+
+
+
+		//函数对象的属性
+		//1.arguments参数集合
+		var foo = function(a,b){
+			console.log(arguments);//类似数组的一个对象
+			console.log(arguments.length);
+		}
+		foo(1,2,3,4);
+
+		//2.length 形参个数
+		function foo(x,y,z){}
+		console.log(foo.length);//3
+
+		//3.caller 获取调用当前函数的函数,只有当函数正在执行时才被定义
+		function test(){
+			if(test.caller == null){
+				console.log(0);
+			}else{
+				console.log(1);
+			}
+		}
+		function testout(){
+			test();
+		}
+		testout();//1
+
+		var obj = {
+			foo1:function(){
+				console.log(this.foo1.caller);
+			},
+			foo2:function abc(){
+				this.foo1();
+			}
+		};
+		obj.foo1();//null
+		obj.foo2();//ƒ abc(){this.foo1();}
+
+		//4.callee 返回正被执行的Function对象，即指定的Function对象的正文
+		//callee 属性是arguments对象的一个成员，该属性仅当相关函数正在执行时才能用，通常这个属性被用来递归调用匿名函数
+
+		var func = function(n){
+			if(n <= 0)
+				return 1;
+			else
+				return n * func(n - 1);
+				//return n*arguments.callee(n - 1);
+		};
+		console.log(func(4));//24
+
+		//匿名函数
+		(function(n){
+			if(n <= 0)
+				return 1;
+			else
+				return n * arguments.callee(n - 1);
+		}(4));
+
+		//5.prototype是函数的重要属性，实例化对象的原型
+		//每一个构造函数都有一个prototype属性，指向另一个对象，这个对象的所有属性和方法，都会被构造函数的实例继承
+
+		var o = {};
+		console.log(o._proto_ === Object.prototype);//true
+
+		var arr = [];
+		console.log(arr._proto_ === Array.prototype);//true
+
+		console.log(Object._proto_ === Function.prototype);//true
+
+		function Man(name,age){
+			this.name = name;
+			this.age = age;
+		}
+		Man.prototype.sex = "M";
+		Man.prototype.sayHi = function(){
+		    console.log("Hi,i'm",this.name,",i'm",this.age,"!");
+		};
+		var li = new Man("Leo",10);
+		li.sayHi();//Hi,i'm Leo ,i'm 10 !
+
+
+
+		//函数对象的方法
+		//1.call 调用一个普通函数或对象的方法时，用另一个对象替换当前对象
+
+		function swim(m,n){
+		    console.log("i'm:"+this.name+" i can swim ___",m,n);
+		}
+		var bird = {
+		    name:"polly",
+		    fly:function(m,n){
+		        console.log("i'm:"+this.name+" i can fly ___",m,n);
+		    }
+		};
+
+		var me = {
+		    name:"ABC"
+		};
+		swim(1,2);
+		swim.call(me,3,4);
+		bird.fly(5,6);
+		bird.fly.call(me,7,8);
+		bird.fly.apply(me,[7,8]);
+		swim.call(null,1,2);
+
+		//2.apply 与call方法不同的是，apply的第二个参数类型必须是Array
+		swim.apply(me,[9,10]);
+		bird.fly.apply(me,[11,12]);
+		swim.apply(null,[13,14]);
+
+		//3.bind
+		var x = 45;
+		var obj = {
+		    x:23,
+		    test:function(){
+				function foo(){
+					console.log(this.x);
+				}
+				foo.bind(this)();//23
+				//var fee = foo.bind(this);fee();//23
+				foo();//45
+		    }
+		};
+		obj.test();
+
+
+
+		//高阶函数 满足函数作为参数被传递（回调函数）或函数作为返回值输出（闭包）
+
+		//1.作为参数被传递
+		function add(x,y,f){
+			return f(x) + f(y);
+		}
+		add(2,3,function(x){
+
+		});
+		console.log(add(2,-3,Math.abs));//5
+		console.log(add(2,3,Math.sqrt));//3.1462643699419726
+
+		//2.作为返回值输出
+		var obj = {x:23};
+		var fun1 = function(){
+			return function fun2(){
+				return this.x;
+			}
+		};
+		obj.fun3 = fun1;
+		obj.fun4 = fun1();
+		console.log(obj.fun3());//ƒ fun2(){return this.x;}
+		console.log(obj.fun3()());//45
+		console.log(obj.fun4());//23
+
+		//filter 数组过滤，返回为false 的将被过滤掉
+		var arr = [1,2,3,4,5,6,9,10,12,15];
+		var r = arr.filter(function(x){
+			return x%2 !== 0;
+		});
+		console.log(r);//[1,5,9,15]
+
+		//sort 排序
+		var arr = [10,20,1,2];
+		var s = arr.sort(function(x,y){
+			if(x<y){
+				return -1;
+			}
+			if(x>y){
+				return 1;
+			}
+			return 0;
+		});
+		console.log(s);//[1,2,10,12]
+
+	</script>
+</head>
+<body>
+
+</body>
+</html>
