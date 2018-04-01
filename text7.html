@@ -1,0 +1,142 @@
+<!Document html>
+<html>
+	<head>
+		<script type="text/javascript">
+		//JS解析及执行简介
+		console.log(a);//undefined
+		var a = 2;
+		console.log(a);//2
+		   //解析器中看见的代码(变量声明提升)
+	    var a;
+	    console.log(a);
+	    a = 2;
+	    console.log(a);
+
+	    //值类型
+	    console.log(b,c);//undefined undefined
+	    var c = 23;
+	    console.log(b,c);//undefined 23
+	    var b = c;
+	    console.log(b,c);//23 23
+
+	    //引用类型
+	    console.log(obj1,obj2);//undefined undefined 
+	    var obj1 = {x:23};
+	    console.log(obj1,obj2);//{x:23} undefined
+	    var obj2 = obj1;
+		console.log(obj1,obj2);//{x:23} {x:23}
+		obj2.x =25;
+		console.log(obj1,obj2);//{x:25} {x:25}
+
+		//函数声明提升案例（ES5中函数及变量声明重复的话，相当于覆盖）
+		foo();//f_2
+		function foo(){
+			console.log("f_1");
+		}
+		function foo(){
+			console.log("f_2");
+		}
+
+			//解析器中的代码
+		function foo(){
+			console.log("f_1");
+		}
+		function foo(){
+			console.log("f_2");
+		}
+		foo();
+
+		//声明会被定义覆盖，如果已经定义，不会再被二次定义
+		//当function前有运算符的话，认定为表达式，不提升
+		AA();//AA_1
+		function AA(){
+			console.log("AA_1");
+		}
+		var AA = function AA(){
+			console.log("AA_2");
+		}
+		//相当于
+		/*function AA(){
+			console.log("AA_1");
+		}
+		var AA;//无效，不能二次定义
+		AA();//AA_1
+		AA = function AA(){
+			console.log("AA_2");
+		}*/
+
+		/*var AA;//被覆盖
+		function AA(){
+			console.log("AA_1");
+		}
+		AA();//AA_1
+		AA = function AA(){
+			console.log("AA_2");
+		}*/
+
+		//静态词法作用域
+		var name = "Jack";
+		function echo(){
+			console.log(name);
+		}
+		function foo(){
+			var name = "Bill";
+			echo();
+		}
+		foo();//Jack 在定义的地方访问
+
+		//全局变量与局部变量
+		var x = "outside f1";
+		var f1 = function(){
+			//var x = "inside f1";//如果没有这行，两次都输出outside f1
+			console.log(x);
+		}
+		f1();
+		console.log(x);
+
+		//若函数内未加var 则相当于创建了全局变量
+		var f2 = function () {
+		    var y = "局部";
+		    //y = "全局";
+		    console.log(y);
+		};
+		f2();
+		console.log(y);//若函数内有var此行报错，若函数内没有var则此行输出全局变量y值
+
+		//JS预解析与作用域
+		if(true){
+		    var i = 0;
+		}
+
+		function foo(){
+		    console.log("j:",j);//undefined
+		    var j = 10;
+		    console.log("j:",j);//10
+		}
+		foo();
+
+		console.log("i:",i);//0
+		console.log("j:",j);//报错
+
+		//解析器中的代码
+		var i;
+		if(true){
+		    i = 0;
+		}
+
+		function foo(){
+		    var j;
+		    console.log("j:",j);//undefined
+		    j = 10;
+		    console.log("j:",j);//10
+		}
+		foo();
+
+		console.log("i:",i);//0
+		console.log("j:",j);//报错
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>
