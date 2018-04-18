@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>text8</title>
+	<script type="text/javascript">
+		0 && function(a,b){
+		    return a>b?a:b;
+		}(5,9);//0
+		!function(x,y){
+		    return x==y?true:false; 
+		}("5",5);//false
+		!function(x,y){
+		    return x===y?true:false; 
+		}("5",5);//true
+
+		//只有一个变量，作用域也相同，最后都指向这一个变量i，存在变量共享
+		function f(){
+		    var getNumFuncs = [];//函数数组
+		    var i=0;
+		    for(;i<10;i++){
+		        getNumFuncs[i] = function(){
+		            return i;
+		        };
+		    }
+		    return getNumFuncs;//设置断点，查看变量共享问题
+		}
+		var tmp = f();
+		tmp[3]();//10
+
+
+		//将上面的代码改为立即执行表达式，相当于建立10个作用域，不存在变量共享问题
+		function f(){
+		    var getNumFuncs = [];//函数数组
+		    var i=0;
+		    for(;i<10;i++){
+				(function(j){//每个变量有独立的j,解决变量共享
+		            getNumFuncs[j] = function(){
+		                return j;
+		            };
+		        }(i));
+		    }
+		    return getNumFuncs;//设置断点，查看变量共享问题
+		}
+		var tmp = f();
+		tmp[3]();//3
+
+		用立即执行表达式解决变量共享（污染）问题  匿名函数
+
+		function f1(){
+			var x = 1;
+			function f2(){
+				return x++;
+			}
+			return f2();
+		}
+		var f3 = f1();
+		//观察f1中的x变量
+		console.log(f3);//输出？1
+		console.log(f3);//输出？1
+
+		
+		function f1(){
+			var x = 1;
+			function f2(){
+				return x++;
+			}
+			return f2;
+		}
+		var f3 = f1();
+		//观察f1中的x变量
+		console.log(f3());//输出？1
+		console.log(f3());//输出？2  说明x没有释放掉，常驻内存
+
+
+
+		var tmp = 100;//注意：词法作用域,形成的闭包是否包含此行的变量tmp？  不包含
+		function foo(x) {
+		    var tmp = 3;//注意：词法作用域，思考：若屏蔽此行，会输出什么？foo之外的tmp是否为闭包的一部分？ 屏蔽之后，能访问到tmp = 100，则输出结果为113 114 115
+		    return function (y) {
+		        console.log(x + y + (++tmp));//静态词法作用域，函数只能访问定义时的tmp
+		    }
+		}
+		var fee = foo(2); // fee 形成了一个闭包
+		fee(10);//16
+		fee(10);//17
+		fee(10);//18
+
+		//typeof
+		console.log(typeof Array);//function
+		console.log(typeof Function);//function
+		console.log(typeof Date);//function
+		console.log(typeof Number);//function
+		console.log(typeof String);//function
+		console.log(typeof Boolean);//function
+		console.log(typeof Math);//object
+		console.log(typeof JSON);//object
+
+		//instanceof
+		console.log(Object instanceof Function);//true
+		console.log(Object instanceof Object);//true
+		console.log(Boolean instanceof Function);//true
+		console.log(Boolean instanceof Object);//true
+		console.log(String instanceof Function);//true
+		console.log(String instanceof Object);//true
+		console.log(Number instanceof Function);//true
+		console.log(Number instanceof Object);//true
+		console.log(Function instanceof Function);//true
+		console.log(Function instanceof Object);//true
+		console.log(Array instanceof Function);//true
+		console.log(Array instanceof Object);//true
+		console.log(Date instanceof Function);//true
+		console.log(Date instanceof Object);//true
+		console.log(Math instanceof Function);//false
+		console.log(Math instanceof Object);//true
+		console.log(JSON instanceof Function);//false
+		console.log(JSON instanceof Object);//true
+
+		//访问器属性，访问和设置时不加括号
+		var o = {
+			_x:1.0,
+			get x(){
+				return this._x;
+			},
+			set x(val){
+				this._x = val;
+			}
+		};
+		console.log(o.x);//1
+		o.x = 2;
+		console.log(o.x,o._x);//2 2
+
+
+		var o = {
+			_x:1.0,
+			get x(){
+				return this._x;
+			}
+		};
+		console.log(o.x);//1
+		o.x = 2;
+		console.log(o.x);//1
+
+		var p1 = {
+		    _name:"Jack",
+		    _age:23,
+		    set age(val){
+		        if(val>0&&val<150){
+		            this._age = val;
+		        }else{
+		            console.log("请设置正常年龄");
+		        }
+		    },
+		    get age(){
+		        return this._age;
+		    }
+		};
+		p1.age = 178;
+		console.log(p1.age);//请设置正常年龄  23
+
+		var obj = {
+		    num:10,
+		    str:"Hi",
+		    show:function(){
+		        return this.str;
+		    }
+		};
+		console.log(obj.num);//10
+		console.log(obj.str);//hi
+		console.log(obj.show());//hi
+		console.log(obj.__proto__);
+		console.log(obj.__proto__ === Object.prototype);//true
+		var newObj = Object.create(obj);//newObj的原型是obj
+		newObj.age = 23;
+		console.log(newObj.num);//10
+		console.log(newObj.str);//hi
+		console.log(newObj.show());//hi
+		console.log(newObj.age);//自有属性  23
+		console.log(newObj.__proto__);
+		console.log(newObj.__proto__ === obj);//true
+
+		//补充
+		var Person = function(name){
+			this.name = name;
+		}
+		var p = new Person("abc");
+		p._proto_ === Person.prototype;
+		Person._proto_=== Function.prototype;
+		Person._proto_._proto_ === Object.prototype;
+		Person._proto_._proto_._proto_ === null;
+
+		//对象属性相关操作
+		var obj = {};
+		obj.x = 2;//直接添加属性
+		console.log(obj.x);//通过.访问属性
+		obj.x = 5;//设置属性
+		console.log(obj["x"]);//通过[]访问属性
+		delete obj.x;//删除属性
+		console.log(obj.x);
+
+		//访问属性的for循环练习
+		var obj2 = {
+		    id_1:2,
+		    id_2:4,
+		    id_3:6,
+		    id_4:8,
+		    id_5:10
+		};
+		for(var i = 1;i<obj2.length;i++)
+		{
+			console.log();			
+		}
+	</script>
+</head>
+<body>
+
+</body>
+</html>>
