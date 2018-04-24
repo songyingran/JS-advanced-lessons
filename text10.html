@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>text10</title>
+	<script type="text/javascript">
+		//PPT15 JS原型继承
+		function Person(age,name){
+			this.age = age;
+			this.name = name;
+		}
+		Person.prototype.sayHi = function(){
+			console.log("Hi,I'm"+this.name);
+		}
+		var p1 = new Person(20,"Jame");
+		p1.sayHi();
+
+		//JS对象及继承方式综述
+		//JavaScript采用的是原型的继承方式，每个对象都有一个原型对象，最原始的原型是null
+		//JavaScript的继承是对象-对象的原型继承，为面向对象提供了动态继承的功能
+		//任何方式创建的对象都有原型对象，可以通过对象的 __proto__ 属性来访问原型对象
+		var a = {};
+		console.log(a.__proto__);
+
+		console.log(a.__proto__ == Object.prototype);//true
+		var b = new Object();
+		console.log(b.__proto__ == Object.prototype);//true
+		console.log(b.__proto__.__proto__);//null
+
+		var obj = {
+			num:10,
+			str:"Hi",
+			show:function(){
+				return this.str;
+			}
+		};
+		var newObj = Object.create(obj);
+		newObj.age = 23;
+		console.log(newObj.__proto__ === obj);//true
+
+		//JS对象原型链
+		var proObj = {
+			z:3
+		};
+		var obj = Object.create(proObj);
+		obj.x = 1;
+		obj.y = 2;
+		console.log(obj.x);//1
+		console.log(obj.y);//2
+		console.log(obj.z);//3
+		console.log("z" in obj);//true
+		console.log(obj.hasOwnProperty("z"));//false
+
+		//自有属性和继承属性的操作
+		obj.z = 5;
+		console.log(obj.hasOwnProperty("z"));//true
+		console.log(obj.z);//5
+		console.log(proObj.z);//3
+
+		obj.z = 8;
+		console.log(obj.z);//8
+
+		delete obj.z;//true
+		console.log(obj.z);//3
+
+		delete obj.z;//true
+		console.log(obj.z);//3
+
+		//基于构造函数实现的原型继承
+		function Person(){
+			this.name = "Jack";
+			console.log("Hi");
+		}
+		var p = new Person();
+		console.log(p);
+
+		//通过构造函数来创建对象
+		//当一个函数与new结合，该函数将作为构造函数来使用，用来创建JS对象
+		//S（ES5）中没有其他语言（C++、Java）中的类，JS中通过构造函数来实现类的功能
+		//在JS中构造函数也是对象，有一个重要的属性（原型 prototype），该属性与继承相关
+
+		function Person(name,age){
+			this.name = name;
+			this.age = age;
+		}
+		Person.prototype.sayHi = function(){
+			console.log(this.name,this.age);
+		}
+		var p = new Person("syr",20);
+		p.sayHi();
+
+		//构造函数有一个重要属性（原型prototype），该属性就是实例化出来的对象的原型
+		//构造函数的这个属性（原型prototype）是真实对象，实例化的对象通过它实现属性继承
+		console.log(p.__proto__ === Person.prototype);//true
+		console.log(Person.__proto__ === Function.prototype);//true
+		console.log(Person.__proto__.__proto__ === Object.prototype);//true
+		console.log(Person.__proto__.__proto__.__proto__ === null);//true
+
+	</script>
+</head>
+<body>
+
+</body>
+</html>
