@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>text11</title>
+	<script type="text/javascript">
+		PPT 16 JS中的this
+
+		//this不进行作用域传递
+		var a = 1;
+		function f1(){
+			var b = 2;
+			function f2(){
+				console.log(a,b);
+			}
+			f2();
+		}
+		f1();//1 2
+
+		//四种应用场景(不管哪个场景下调用，this指向的都是调用此函数的主体)
+		//一般函数，对象方法，构造函数，间接调用
+
+		//一般函数的this(非严格模式)指向的是全局对象，可以通过this在函数内添加、删除、修改全局对象属性
+		var a = 10,b = "Hi";
+		function thisTest(){
+			this.a = 20;
+			delete this.b;
+			this.c = "新添加的全局变量";
+		}
+		thisTest();
+		console.log(a,c);//20 "新添加的全局变量"
+
+		function thisTest(){
+			var a = b = 2;
+		}
+		thisTest();
+		console.log(a);//报错
+		console.log(b);//2
+		//一般函数中的this(严格模式)指向的是undefined
+
+		//对象方法中的this，指代的是调用此方法的对象（无嵌套）
+		var point = {
+			x:0,
+			y:0,
+			moveTo : function(x,y){
+				this.x = x;
+				this.y = y;
+			}
+		};
+		point.moveTo(1,1);//this绑定当前对象，即point对象
+		console.log(point);
+
+		//构造函数中的this指代的是通过new新创建的对象
+		function Person(age){
+			this.age = age;
+		}
+		var p = new Person(23);
+		console.log(p.age);//23
+
+		var Person = function(name,age){
+			this.name = name;
+			this.age = age;
+			this.showMe = function(){
+				console.log(this.name,this.age);
+			}
+		}
+		var p1 = new Person("Mike",23);
+		var p2 = new Person("Lucy",22);
+		p1.showMe();//Mike 23
+		p2.showMe();//Lucy 22
+
+		//间接调用中的this
+		//JS中函数也是对象（函数对象），也有属性和方法（length、call、apply等）
+		//JS中函数可以通过call和apply进行间接调用，动态的指定由谁来调用此函数
+		objA = {name:"AA",x:1};
+		objB = {name:"BB",x:5};
+		function test(){
+			console.log(this.name,this.x);
+		}
+		objA.fun = test;
+		objA.fun();//AA 1
+		objA.fun.call(objB);//BB 5
+
+		//对象方法中的this（有嵌套的情况下）
+		var point = {
+			x:0,
+			y:0,
+			moveTo:function(x,y){
+				function moveToX(x){
+					this.x = x;
+				};
+				function moveToY(y){
+					this.y = y;
+				}
+				moveToX();
+				moveToY();
+			}
+		};
+		point.moveTo(2,2);
+		console.log(point);//x: 0, y: 0, moveTo: ?
+		console.log(window.x,window.y);//undefined undefined
+
+		//使用变量that或self软绑定
+		var point = {
+			x:0,
+			y:0,
+			moveTo:function(x,y){
+				var that = this;//that指向的是point对象
+				function moveToX(x){
+					that.x = x;
+				};
+				function moveToY(y){
+					that.y = y;
+				}
+				moveToX();
+				moveToY();
+			}
+		};
+		point.moveTo(2,2);
+		console.log(point);//x: undefined, y: undefined, moveTo: ?
+		console.log(x,y);//报错
+
+		//使用call/apply间接调用
+		var point = {
+			x:0,
+			y:0,
+			moveTo:function(x,y){
+				function moveToX(){
+					this.x = x;
+				};
+				function moveToY(){
+					this.y = y;
+				}
+				moveToX.call(this);
+				moveToY();
+			}
+		};
+		point.moveTo(2,2);
+		console.log(point);//x: 2, y: 0, moveTo: ?
+		console.log(y);//2
+		console.log(x);//报错
+
+		//使用Function.prototype.bind
+		var point = {
+			x:0,
+			y:0,
+			moveTo:function(x,y){
+				function moveToX(){
+					this.x = x;
+				};
+				function moveToY(){
+					this.y = y;
+				}
+				moveToX.bind(point)();
+				moveToY.bind(point)();
+			}
+		};
+		point.moveTo(2,2);
+		console.log(point);//x: 2, y: 2, moveTo: ?
+
+
+
+		function Point(x,y){
+			this.x = x;
+			this.y = y;
+			this.moveXY = function(x,y){
+				function moveX(x){
+					this.x += x;
+				}
+				function moveY(y){
+					this.y += y;
+				}
+				moveX(x);//moveX.call(this,x);     //call间接调用
+				moveY(y);//moveY.apply(this,[y]);  //apply间接调用
+				//moveX.bind(this,x)();            //bind绑定
+			};
+		}
+		var p = new Point(2,3);
+		p.moveXY(1,1);
+		console.log(p);//3 4
+
+
+
+
+		//PPT 17 深入理解JS的继承方式
+		//多个对象继承于一个原型时，存在原型共享
+		var superObj = {
+			x:1,
+			y:2
+		};
+		var subObj_First = Object.create(superObj);
+		var subObj_Second = Object.create(superObj);
+		subObj_First.__proto__.x = 5;
+		console.log(subObj_Second.x);//5
+
+		//构造函数实现的对象—对象的原型继承的原型共享问题
+		function Person(name){
+			this.name = name;
+		};
+		Person.prototype.age = 22;
+		Person.prototype.showMe = function(){console.log(this.name);};
+		function Student(id){
+			this.id = id;
+		}
+		Student.prototype = new Person("Mike");
+		var s1 = new Student(2017001);
+		var s2 = new Student(2017002);
+		console.log(s1.name,s1.age,s1.id);//Mike 22 2017001
+		console.log(s2.name,s2.age,s2.id);//Mike 22 2017002
+		s1.__proto__.name = "Jack";
+		console.log(s2.name);//Jack
+		s2.__proto__.__proto__.age = 99;
+		console.log(s2.age);//99
+
+		//通过构造含糊模拟类—类的继承
+		//构造函数实现的对象—对象的原型继承的原型共享问题
+		function Person(name,age){
+			this.name = name;
+			this,age = age;
+		};
+		Person.prototype.showName = function(){
+			console.log(this.name);
+		};
+		function Student(name,age,id){
+			Person.call(this,name,age);
+			this.id = id;
+		}
+		Student.prototype.__proto__ = Person.prototype;
+		var s1 = new Student("xxx",22,2017001);
+		var s2 = new Student("www",23,2017002);
+
+
+		//静态方法与原型方法的区别
+		//静态方法是构造器函数对象（类）的属性，原型方法是实例化对象（对象）的原型的属性
+		var BaseClass = function(){};
+		BaseClass.prototype.f2 = function(){
+			console.log("Tish is a prototype method");
+		};
+		BaseClass.f1 = function(){
+			console.log("Tish is a static method");
+		};
+		BaseClass.f1();
+		var instance1 = new BaseClass();
+		instance1 = new BaseClass();
+		instance1.f2();
+
+		//对象原型的constructor属性
+		//因为对象实例从原型继承了constructor，所以可以通过constructor得到实例的构造函数
+		//确定对象的构造函数名、创建相似对象、constructor可用于指定构造函数
+		function Foo(){
+		}
+		var f = new Foo();
+		console.log(f.constructor.name);//Foo
+
+		function Constr(name){this.name = name;}
+		var x = new Constr("Jack");
+		var y = new x.constructor("Mike");
+		console.log(y,y instanceof Constr);//Constr{} true
+
+		//对象的公有属性、私有属性
+		function A(id){
+			this.publicId = id;
+			var privateId = 456;
+			this.getId = function(){
+				console.log(this.publicId,privateId);
+			};
+		}
+		var a = new A(123);
+		console.log(a.publicId);//123
+		console.log(a.privateId);//undefined
+		a.getId();//123 456
+
+	</script>
+</head>
+<body>
+
+</body>
+</html>
