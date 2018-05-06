@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>text12</title>
+	<script type="text/javascript">
+		//PPT 18 标准内置对象—构造器
+		//数组的创建和基本操作（增删改查）
+		//创建数组的方式
+		//1.通过字面量的方式直接创建，直接量中的值是任意的表达式
+		//2.通过Array构造函数来创建数组对象
+		var arr2 = new Array(5);
+		console.log(arr2);//5个undefined
+		var arr3 = new Array("5");
+		console.log(arr3);//一个字符5
+
+		//异步执行
+		var arr22 = [];
+		for(var i = 0;i<5;i++){
+			document.onclick = function(){
+				arr22[i] = i;
+			}
+		}
+		//点击页面，则arr22数组中有五个空值，第六个元素为5，即arr22[5] = 5;
+
+		//数组直接量中的值不一定是常量，可以是任意的表达式
+		var base = 1024;
+		var table = [base,base+1,base+2,base+3];
+
+		var a3 = [1,2,3];
+		var a4 = a3;
+		a4 = [];
+		console.log(a3,a4);//[1,2,3]  []
+
+		var a = ["hello"];
+		a[1] = 3.14;//增：直接添加数组元素，通过方法添加元素参见后续章节
+		a[2] = "world";
+		console.log("删除a[2]前的数组a",a);
+		delete a[2];
+		console.log("删除a[2]后的数组a",a);
+		a[0] = "XX";//改：修改数组元素a[0]
+		console.log(a[0]);//查:看数组中的元素，索引从0开始
+
+		var arr = [1,2,3];
+		var p = arr.pop();
+		console.log(p);//3
+
+		var i = 2,b = [];
+		b[i] = 3;
+		b[i+1] = "YY";
+		b[b[i]] = b[0];
+		console.log(b);//?[empty × 2, 3, undefined]
+
+		//数组与对象的区别
+		//数组是对象的特殊形式，可以为数组添加对象属性,对于0至2的32次方之外的数，将作为普通对象的键来对待
+		//数组特别之处在于，当使用使用2的32次方以内的非负整数作为属性名时（包括类型转换的数字），数组会自动维护其length属性，作为数组的元素，而不是数组对象的属性
+
+		var arr = [];
+		arr[-1.23] = "xx";
+		arr["5"] = "yy";
+		console.log(arr);//[empty × 5, "yy", -1.23: "xx"]
+
+		function f(){
+			console.log(arguments);
+		}
+		f(1,2,3,"x");//arguments可以区分元素和属性
+
+		var arr = [,,];
+		console.log(arr.length);//2
+
+		//稀疏数组与多维数组
+		//通过包含数组的数组来模拟多维数组
+		var table = new Array(5);
+		for(var i=0;i<table.length;i++){
+		    table[i] = new Array(5);//若是table[i] = new Array(i);
+		}
+
+		for(var row=0;row<table.length;row++){
+		    for(var col=0;col<table[row].length;col++){
+		        table[row][col]=row*col;
+		    }
+		}
+		var product = table[2][4];
+		console.log(table);
+
+
+		//数组的方法和相关高阶函数
+		//数组的静态方法（构造器函数对象的方法）
+
+		//from 从一个类似数组或可迭代对象中创建一个新的数组实例
+		var bar = ["a","b","c"];
+		console.log(Array.from(bar));//["a", "b", "c"]
+		console.log(Array.from('foo'));//?["f", "o", "o"]
+
+		//of 创建一个具有可变数量参数的新数组实例，而不考虑参数的数量或类型
+		console.log(Array.of(7));//[7]
+		console.log(Array.of(1,2,3));//[1, 2, 3]
+		console.log(Array(7));//[empty × 7]
+		console.log(Array(1,2,3));//?[1, 2, 3]
+
+		//isArray 用于确定传递的值是否是一个Array
+		var arr = [1,3,4];
+		console.log(Array.isArray(arr));
+
+		function foo(){
+			console.log(Array.isArray(arguments));//false
+			console.log(Array.prototype.pop.call(arguments));//5
+		}
+		foo(3,2,5);
+
+		//数组原型方法（添加和删除元素-破坏性）
+
+		//shift 从数组中删除第一个元素，并返回该元素的值。此方法更改数组的长度。
+		var arr2 = [1,3,5,7];
+		var shiftElement = arr2.shift();
+		console.log(shiftElement,arr2);//1 [3, 5, 7]
+
+		//unshift 将一个或多个元素添加到数组的开头，并返回新数组的长度。
+		var newLength = arr2.unshift(1,2);
+		console.log(newLength,arr2);//5 [1,2,3,5,7]
+
+		//pop 删除数组的最后一个元素并返回，改变数组的长度
+		var popElement = arr2.pop();
+		console.log(popElement,arr2);//7 [1, 2, 3, 5]
+
+		//push 在数组的末尾添加元素，改变数组长度
+		var newLength = arr2.push(77,88);
+		console.log(newLength,arr2);//6 [1, 2, 3, 5, 77, 88]
+
+		//通过push将两个数组组合成一个数组
+		var arr3 = ["a","b"];
+		var arr4 = ["c","d"];
+		Array.prototype.push.apply(arr3,arr4);
+		console.log(arr3);//?["a", "b", "c", "d"]
+
+		//splice 从数组中移除n个元素，并且可以用新的item替换被移除的元素
+		var arr5 = ["a","b","c","d"];
+		var spliceElenments = arr5.splice(1,2,"x");
+		console.log(spliceElenments,arr5);//?["b", "c"] ["a", "x", "d"]
+
+		//数组原型方法（排序和颠倒元素顺序-破坏性）
+
+		//reverse  将数组中元素的位置颠倒
+		var arr1 = [1,2,3];
+		arr1.reverse();
+		console.log(arr1);//[3, 2, 1]
+
+		//sort(compareFunction?) 对数组的元素做原地的排序，并返回这个数组。sort排序可能是不稳定的，默认按照字符串的字母顺序排序
+		var arr2 = ["banana","apple","pear","orange"];
+		arr2.sort();
+		console.log(arr2);//["apple", "banana", "orange", "pear"]
+
+		//数组原型方法（合并、切分和连接-非破坏性）
+
+		//concat 数组合并
+		var arr4 = ["banana","apple"];
+		var arr5 = ["pear","orange"];
+		var newArray = arr4.concat(arr5);
+		console.log(newArray);//["banana", "apple", "pear", "orange"]
+
+		//slice 返回一个从开始到结束（不包括结束）选择的数组的一部分浅拷贝到一个新数组对象，切原始数组不会被修改
+		var arr6 = [1,2,3,4,5];
+		var newArray = arr6.slice(2,4);
+		console.log(newArray,arr6);//[3, 4] [1, 2, 3, 4, 5]
+		var newArray2 = arr6.slice(2);
+		console.log(newArray2,arr6);//[3, 4, 5] [1, 2, 3, 4, 5]
+
+		//join 将一个数组（或一个类数组的对象）的所有元素连接成一个字符串并返回这个字符串
+		var arr7 = [3,4,5];
+		var joinReturn = arr7.join("--");
+		console.log(joinReturn);//3--4--5
+
+		//数组原型方法（值的查找-非破坏性）
+
+		//indexOf -------------------------------------------两个参数---------------------------------------
+		//返回在数组中可以找到一个给定元素的第一个索引，如果不存在，则返回-1
+		var arr8 = [1,2,3,5,5,7,9,5];
+		console.log(arr8.indexOf(5));//3
+		console.log(arr8.indexOf(5,3));//3
+		console.log(arr8.indexOf(5,5));//7
+
+		//lastIndexOf ---------------------------------------两个参数---------------------------------------
+		//返回指定元素在数组中的最后一个的索引，如果不存在则返回-1.从数组的后面向前查找
+		console.log(arr8.lastIndexOf(5));//7
+		console.log(arr8.lastIndexOf(5,3));//3
+		console.log(arr8.lastIndexOf(5,5));//4
+
+		//数组原型方法（迭代-非破坏性-检测方法）
+
+		//forEach 对数组的每一个元素执行一次提供的函数
+		var arr1 = [2,5,8];
+		arr1.forEach(function(a){
+			if(a>3){
+				console.log(a,"大于3");
+			}else{
+				console.log(a,"不大于3");
+			}
+		});
+		console.log(arr1);//2 "不大于3"  5 "大于3"  8 "大于3"
+
+		//every 测试数组的所有元素是否都通过了指定函数的测试
+		var arr2 = [2,5,8];
+		var returnValue = arr2.every(function(a){
+			return a%2 === 0;
+		});
+		console.log(returnValue);//false
+
+		//some 测试数组中某些元素是否通过了指定函数的测试
+		var arr2 = [2,5,8];
+		var returnValue = arr2.some(function(a){
+			return a%2 === 0;
+		});
+		console.log(returnValue);//true
+
+		//数组原型方法（迭代-非破坏性-转换方法）
+
+		//map 返回一个由原数组中的每个元素调用一个指定方法后的返回值组成的新数组，不会改变原数组
+		var arr2 = [1,3,5,7,9];
+		var newArray = arr2.map(function(a){
+			return(a>2 && a<8)?true:false;
+		});
+		console.log(newArray,arr2);//[false, true, true, true, false]  [1, 3, 5, 7, 9]
+
+		//filter 使用指定的函数测试所有元素，并创建一个包含所有通过测试的元素的新数组
+		var arr2 = [1,3,5,7,9];
+		var newArray = arr2.filter(function(a){
+			return (a>2 && a<8)?true:false;
+		});
+		console.log(newArray,arr2);//?[3, 5, 7]  [1, 3, 5, 7, 9]
+
+		//数组原型方法（迭代-非破坏性-归约方法）
+
+		//reduce 接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，最终为一个值
+		function add(prev,cur){
+			return prev+cur;
+		}
+		var arr3 = [10,3,1];
+		console.log(arr3.reduce(add));//14
+
+		//reduceRight 接受一个函数作为累加器和数组的每个值（从右到左）将其减少为单个值
+		function add(prev,cur){
+			return prev+cur;
+		}
+		var arr3 = [10,3,1];
+		console.log(arr3.reduceRight(add));//14
+
+	</script>
+</head>
+<body>
+
+</body>
+</html>
