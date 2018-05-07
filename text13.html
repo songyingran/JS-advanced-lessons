@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript">
+		//PPT 19 标准内置对象-构造器（Date）
+
+		//通过构造函数创建Date对象的4种形式
+
+		//1.new Date(year,month,date?,hours?,minutes?,seconds?,milliseconds?) 
+		var date1 = new Date(2017,9,18,12,34,1);
+		console.log(date1);//Wed Oct 18 2017 12:34:01 GMT+0800
+		  //参数为字符串类型
+		var date2 = new Date(17,9,18,12,34,1);
+		console.log(date2);//Thu Oct 18 1917 12:34:01 GMT+0800
+		//2.new Date(dateTimeStr)
+		var date3 = new Date("2017-08-09");
+		console.log(date3);//Wed Aug 09 2017 08:00:00 GMT+0800
+		//3.
+		var date4 = new Date(1000);
+		console.log(date4);//Thu Jan 01 1970 08:00:01 GMT+0800
+
+		//4.得到当前的时间
+		var date5 = new Date();
+		console.log(date5);//Mon May 07 2018 14:36:52 GMT+0800
+
+		//Date静态方法
+		//1.Date.now()
+		console.log(Date.now());//以毫秒为单位返回当前时间（从1970年1月1日00:00:00开始计算）//1525675218121
+		//2.Date.parse(date Time String)//转成毫秒，从1970年1月1日 00:00:00开始计算
+		console.log(Date.parse("1970-01-01"));//0
+		console.log(Date.parse("1970-01-02"));//86400000
+		//3.Date.UTC(year,month,date?,hours?,seconds?,milliseconds?)//转成毫秒 标准时间//将给定的日期转换成毫秒，解释为UTC，协调世界时间
+		console.log(Date.UTC(2017,9,1));//1506816000000
+
+		//Date原型方法
+
+		//Date.prototype.get<Unit>()  Date.prototype.set<Unit>()
+		var d = new Date("1978-11-25");
+		console.log(d.getFullYear(),d.getMonth(),d.getDay(),d.getDate(),d.getHours());//1978 10 6 25 8
+		console.log(d.getTimezoneOffset());//-480
+		d.setDate(11);
+		console.log(d.getFullYear(),d.getMonth(),d.getDay(),d.getDate(),d.getHours());//1978 10 6 11 8
+		d.setFullYear(1999,5,3);
+		console.log(d.getFullYear(),d.getMonth(),d.getDay(),d.getDate(),d.getHours());//1999 5 4 3 8
+
+		//Date.prototype.toTimeString() Date.prototype.toLocalString() Date.prototype.toJSON()
+		var d = new Date(2012,3,21,15,7,23,234);
+		console.log(d.toTimeString(),"__",d.toLocaleTimeString());//15:07:23 GMT+0800 (中国标准时间) __ 下午3:07:23
+		console.log(d.toDateString(),"__",d.toLocaleDateString());//Sat Apr 21 2012 __ 2012/4/21
+		console.log(d.toJSON());//2012-04-21T07:07:23.234Z
+
+
+		//算出7月的今天的这个号是星期几
+		var today = new Date();//首先获得今天的日期
+		today.setMonth(6);//设置today的月份
+		console.log(today.getDay());//6
+	</script>
+</head>
+<body>
+
+</body>
+</html>
