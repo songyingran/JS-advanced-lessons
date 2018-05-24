@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>text16</title>
+	<script type="text/javascript">
+	//PPT 23 JSON对象
+	//JSON本质是一个字符串
+	var json = {"a":"hello","b":"world"};
+	//JSON 对象方法
+
+	//JSON.stringify(value [,replacer [,space] ] )
+
+	var a1 = [1,"x",true,{y:2,z:3}];
+	var jsonStrArr1 = JSON.stringify(a1);
+	console.log(jsonStrArr1);//'[1,"x",true,{"y":2,"z":3}]'
+	console.log(a1);//[1,"x",true,Object]
+
+	function replacer(key,value){
+		if(typeof value === "string"){
+			return "mytrue";
+		}
+		return value;
+	}
+	var foo = {
+		model:"box",
+		week:45,
+		transport:"car",
+		month:7
+	};
+	var json1 = JSON.stringify(foo,replacer);
+	console.log(json1);
+
+	//JSON.parse(text [,reviver])
+	var jsonStr3 = '{"a":[1,2],"b":true,"c":[3,4,"x",{"y":34,"z":56}]}';
+	var jsonStr4 = '[1,"x",true,{"y":2,"z":3}]';
+	var o3 = JSON.parse(jsonStr3);//{a:Array(2),b:true,c:Array(4)}
+	var o4 = JSON.parse(jsonStr4);//[1,"x",true,Object]
+
+	</script>
+</head>
+<body>
+
+</body>
+</html>
