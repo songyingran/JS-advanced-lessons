@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>text14</title>
+	<style type="text/css">
+		#div1{
+		  width: 200px;
+		  height: 200px;
+		  background-color: red; 
+		  margin: 0px;
+		  padding: 0px; 
+		}
+
+		#div2{
+		  width: 100px;
+		  height: 100px;
+		  background-color: yellow; 
+		  padding: 0px;
+		  margin: 50px;
+		  position: absolute;
+		}
+	</style>
+	<script type="text/javascript">
+	//JS事件是浏览器或用户自身执行的某种动作（包括前端中的事件、Node中的事件等）
+	//前端事件主要包括BOM或DOM中发生的特定的交互
+	//常见事件（load、click、mouseover、keydown、keyup）
+	/*window.onload = function(e){
+		console.log(e.target);
+		//console.log("window onload");
+		var div1 = document.getElementById("div1");
+		div1.onclick = function(e){
+			console.log(e.clent)
+			//console.log("div1 onclick");
+		}
+		//var eventHandler = function(e){
+		//	console.log(e.clientX,e.clientY);
+		//}
+		div1.onclick = eventHandler;
+		//div1.onclick = null;
+	}*/
+
+
+	//JS事件响应处理
+	//HTML事件响应处理
+	//<div id ="div1" onclick = "div1click()"></div>
+	//<div id ="div2" ondrag = "console.log('drag')"></div>
+	//DOM0级事件响应处理
+	/*window.onload = function(e){
+		var div1 = document.getElementById("div1");
+		var eventHandler = function(e){
+			console.log(e.clientX,e.clientY);
+		}
+		div1.onclick = eventHandler;
+		//div1.onclick = null;//取消事件响应
+	}*/
+	//DOM2级事件响应处理（比DOM0级事件响应处理更强，可以重复，支持自定义事件）
+	/*window.onload = function(e){
+		var div1 = document.getElementById("div1");
+		var eventHandler = function(e){
+			console.log(e.clientX,e.clientY);
+		}
+		div1.addEventListener("click",eventHandler);
+		//div1.removeEventListener("click",eventHandler);
+	}*/
+	</script>
+</head>
+<body>
+	<div id ="div1"></div>
+	<div id ="div2"></div>
+</body>
+</html>
