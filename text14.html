@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>text14</title>
+	<script type="text/javascript">
+	//PPT 20 正则表达式
+	//正则表达式是对字符串和特殊字符操作的一种逻辑公式，是对字符串执行模式匹配的工具
+	//通常被用来检索、替换那些符合某个模式（规则）的文本
+	//JS中正则表达式是一个描述字符模式的对象，可以通过字面量、RegExp构造器来生成
+
+	//通过字面量直接创建
+	var reg1 = /[bcf]at/gi;
+
+	//通过RegExp构造函数来实例化正则对象
+	var reg1 = new RegExp(/[bcf]at/gi,"gi");
+
+	console.log("a fAt bat, a faT cat".match(reg1));//['fAt','bat','fat','cat']
+
+	//正则语法概述和修饰符（g全局，i忽略大小写，m包含换行）
+	var regExp = /a?b/gi;//匹配ab或者b
+	var matchResult = "xxabcaabbbxyz".match(regExp);
+	console.log(matchResult)；//["ab","ab","b","b"]
+
+	//使用split进行分割，返回的是数组
+	var str = "xx-xxy-xx";
+	var a = str.split("-");
+	console.log(a);//["xx", "xxy", "xx"]
+
+	//使用正则表达式进行分割
+	var str = "xx-x*y-xx";
+	var a = str.split(/[-*]/gi);
+	console.log(a);//["xx", "x", "y", "xx"]
+
+	//正则表达式的元字符和与\相关的字符
+
+	//  \d  匹配一个数字，/\d/ 或者 /[0-9]/ 匹配"B2 is the suite number."中的'2'
+	//  \D  匹配一个非数字字符， /\D/ 或者 /[^0-9]/ 匹配"B2 is the suite number."中除了2以外的字符 
+	//  \w  匹配一个单字字符（字母、数字或者下划线），例如, /\w/ 匹配 "apple," 中的 'a'，"$5.28,"中的 '5' 和 "3D." 中的 '3'
+	//  \W  匹配一个非单字字符，例如, /\W/ 或者 /[^A-Za-z0-9_]/ 匹配 "50%." 中的 '%'
+	//  \s  匹配一个空白字符，包括空格、制表符、换页符和换行符，例如, /\s\w*/ 匹配"foo bar."中的' bar'
+	//  \S  匹配一个非空白字符，例如， /\S\w*/ 匹配"foo bar."中的'foo'
+	//  \b  匹配一个词的边界。一个词的边界就是一个词不被另外一个“字”字符跟随的位置或者没有其他“字”字符在其前面的位置
+	//  \B  匹配一个非单词边界，例如，/\B../匹配"noonday"中的'oo', 而/y\B./匹配"possibly yesterday"中的’ye‘
+
+	//正则表达式特殊字符（字符类）
+	//[]代表字符类，
+
+
+
+
+	"a2d5".replace(/\d/gi,"X");//"aXdX"
+	"a2d5".replace(/\w/gi,"X");//"XXXX"
+	"a2d5".replace(/\D/gi,"X");//"X2X5"
+	"a2d5".replace(/\W/gi,"X");//"a2d5"
+	// \b指的是字符前面有边界，例：空格
+	console.log(/oo/.test("moon"));//true
+	console.log(/oo\b/.test("moon"));//false
+	console.log(/oon\b/.test("moon"));//true
+	console.log(/\boo/.test("moon"));//false
+
+	console.log(/oo/.test("moon"));//true
+	console.log(/oo\B/.test("moon"));//true
+	console.log(/oon\B/.test("moon"));//false
+	console.log(/\Boo/.test("moon"));//true
+	//$以某个字符作为结尾
+	console.log(/oo$/.test("moon"));//false 
+	console.log(/oon$/.test("moon"));//true
+	//^以某个字符作为开始
+	console.log(/^moo/.test("moon"));//true 
+
+	//正则表达式贪婪模式和非贪婪模式
+	"12345678".replace(/\d{3,6}/,'X');//默认为贪婪模式  "X78"
+	"12345678".replace(/\d{3,6}?/,'X');//设置为非贪婪模式，在量词后面加？  "X45678"
+
+
+	//正则表达式分组，用小括号()代表
+	console.log("NameNameName_11111".replace(/Name{3}/,"X"));//"NameNameName_11111"
+	console.log("NameNameName_11111".replace(/(Name){3}/,"X"));//"X_11111"
+	console.log("NameNameNameee_11111".replace(/Name{3}/,"X"));//"NameNameName_11111"//"NameNameX_11111"
+
+	//正则对象有一个属性记录匹配的下标
+	//test检测是否能匹配到指定的字符，返回true或者false
+	var regExp = /a/gi;
+	console.log(regExp.test("ab"));//true
+	console.log(regExp.test("ab"));//false
+	console.log(regExp.test("ab"));//true
+
+	//正则表达式原型方法（exec）,可获得详细信息
+	var execExp2 = /\d{1,2}(\d)(\d)/g;
+	var ts = "12s342dsfsf233s";
+	console.log(execExp2.exec(ts),execExp2.lastIndex);//lastIndex为 6  ?["342", "4", "2", index: 3, input: "12s342dsfsf233s", groups: undefined] 6
+	console.log(execExp2.exec(ts),execExp2.lastIndex);//lastIndex为 14  ?["233", "3", "3", index: 11, input: "12s342dsfsf233s", groups: undefined] 14
+
+	var reg = /\d/gi;
+	reg.test("24hsviudf");
+
+	</script>
+</head>
+<body>
+
+</body>
+</html>
