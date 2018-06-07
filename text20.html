@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>text20</title>
+	<script type="text/javascript">
+		//PPT 27 ES6中的let与const
+
+
+		//ES5中的var及其缺陷
+		//ES5通过var声明变量（无块作用域，可能造成变量污染）
+		var userId = 12;
+		document.onclick = function(){
+			console.log("userId =",userId);
+		};
+		var a = 2,b = 3;
+		if(a<b){
+			var userId = 34;
+		}
+		console.log(userId);//34 变量污染
+
+		//ES5通过var声明变量（可能造成变量的非期望共享）
+		//用立即执行表达式（匿名函数）可以解决变量共享的问题
+		for(var i = 0;i<3;i++){
+			(function(j){
+				setTimeout(function(){
+					console.log(new Date,j);
+				},1000*i);
+			})(i);
+		}
+
+		//ES6中的let与const
+		//通过let声明变量，只能在let命令所在的代码块{}内有效
+
+		let userId = 123;
+		document.onclick = function(){
+			console.log("userId = ",userId);
+		};
+		let a = 2,b = 3;
+		if(a<b){
+			let userId = 234;
+		}
+
+		//有效的避免变量共享缺陷
+		for(let i = 0;i<3;i++){
+			setTimeout(function(){
+				console.log(new Date,i);
+			},1000*i);
+		}
+
+		//ES6使用const来声明常量，也常用来声明不变的函数
+		//const声明是必须赋值，一旦声明必须立即初始化
+		//const有块作用域
+		if(true){
+			const MAX = 5;
+			console.log(MAX);//5
+		}
+		console.log(MAX);//报错
+		//const可以声明不变的函数
+		const fee = function(){};
+
+		//const对象的引用不可变，但其属性是可变的
+
+		//let和const常量的特性--不进行变量提升特性
+		//用let声明变量是，在声明前不能使用该变量
+		console.log(a);
+		let a = 2;
+		console.log(a);//报错
+
+		//let和const常量的特性--暂时性死区
+		//只要块级作用域内存在let,它所声明的变量就“绑定”在这个区域，不在受外部影响
+		var temp = new Date();
+		function f(){
+			console.log(temp);
+			if(false){
+				let temp = "Hi";
+		    }
+		}
+		f();//输出时间
+
+		var temp = new Date();
+		function f(){
+			console.log(temp);
+			//if(false){
+				let temp = "Hi";
+		    //}
+		}
+		f();//报错
+
+
+		//let 和 var 不能同时使用
+		let b;  var b;//报错，重复定义
+	</script>
+</head>
+<body>
+
+</body>
+</html>
