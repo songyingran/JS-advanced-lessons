@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PPT 31</title>
+	<script type="text/javascript">
+		//PPT 31 ES6新增数据类型和数据结构
+		let s = Symbol();
+		typeof s;//symbol
+
+		var s1 = Symbol('foo');
+		var s2 = Symbol('bar');
+		console.log(s1);//Symbol(foo)
+		console.log(s2);//Symbol(bar)
+
+		//Symbol的特点
+		//Symbol函数的参数只是表示Symbol值的描述，相同参数的Symbol函数的返回值是不相等的
+		//Symbol变量不能与其他值进行运算，但可转换成字符串类型
+
+
+		//如果 Symbol 的参数是一个对象，就会调用该对象的toString方法，将其转为字符串，然后才生成一个 Symbol 值
+		const obj = {
+		    toString() {
+		        return 'abc';
+		    }
+		};
+		const sym = Symbol(obj);
+		sym // Symbol(abc)
+
+
+		//Symbol的唯一性
+		var s1 = Symbol('foo');
+		var s2 = Symbol('foo');
+		console.log(s1 === s2);//false
+
+		var s1 = Symbol();
+		var s2 = Symbol();
+		console.log(s1 === s2);//false
+
+		var mySymbol = Symbol();
+		var a = {};
+		a[mySymbol] = 'Hello!';
+		var b = {
+			[mySymbol] : 'Hello!'
+		};
+		var c = {};
+		Object.defineProperty(c,mySymbol,{value:'Hello!'});
+		console.log(a[mySymbol]);//"Hello!"
+		console.log(b[mySymbol]);//"Hello!"
+		console.log(c[mySymbol]);//"Hello!"
+
+		//Symbol和字符串的区别，字符串重复赋值会被覆盖，Symbol重复赋值不会
+		var sy1 = Symbol("xx");
+		var sy2 = Symbol("xx");
+		var st1 = "xx";
+		var st2 = "xx";
+		var obj = {};
+		obj[sy1] = "12";
+		obj[sy2] = "34";
+		obj[st1] = "56";
+		obj[st2] = "78";
+		console.log(obj);//xx: "78", Symbol(xx): "12", Symbol(xx): "34"
+
+		//区分使用点操作符和中括号操作符时，访问对象属性的不同，Symbol需使用[]，而不是点
+		var mySymbol = Symbol();
+		var a = {};
+		a.mySymbol = 'Hello!';
+		console.log(a[mySymbol]);//undefined
+		console.log(a['mySymbol']);//Hello!
+
+		var myS1 = Symbol("xx");
+		var myS2 = "xx";
+		var obj = {
+		    [myS1]:123,
+		    [myS2]:456
+		};
+		console.log(obj[myS1],obj[Symbol("xx")]);//123 undefined
+		console.log(obj[myS2],obj["xx"]);//456 456
+		console.log(obj["myS1"]);//undefined
+		console.log(obj["myS2"]);//undefined
+
+		var obj = {};
+		var s1 = Symbol();
+		var s2 = Symbol();
+		obj[s1] = 123;
+		obj[s2] = 456;
+		obj["s1"] = 789;
+		obj.s2 = 890;
+		for(var k in obj){
+			console.log(k);
+		}//s1 s2    两个的数据类型均为字符串
+
+		//新增的数据结构Set
+		//类似于数组，但是成员的值是唯一的，没有重复的值
+		//通过add方法向Set结构加入成员，Set结构不会添加重复的值
+
+		let s1 = new Set([1,2,3,4,5,3,5,6]);
+		console.log(s1);//Set(6)?{1, 2, 3, 4, 5,6}
+
+		var s2 = new Set();
+		[2,3,5,4,2,2].map(x=>s2.add(x));
+		for(let i of s2){
+			console.log(i);
+		}//2 3 5 4
+
+		//Map 
+		//它类似于对象，也是键值对的集合，但是“键”的范围不限于字符串
+		//Object结构提供了“字符串-值”的对应，Map结构提供了“值-值”的对应
+		// 创建Map时也可以使用一个数组作为构造参数，此数组的每个元素是键值对的数组
+
+		var m = new Map();
+		var o = {p: 'Hello World'};
+		m.set(o, 'content');
+		m.get(o); // "content"
+		m.has(o); // true
+		m.delete(o); // true
+		m.has(o); // false
+
+		var o = {};
+		var map = new Map([
+		    ['name', '张三'],
+		    [o, 'Author']
+		]);
+		map.size; // 2
+		map.has('name'); // true
+		map.get('name'); // "张三"
+		map.has(o); // true
+		map.get(o); // "Author"
+		
+	</script>
+</head>
+<body>
+
+</body>
+</html>
