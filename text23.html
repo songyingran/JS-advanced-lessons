@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PPT 30</title>
+	<script type="text/javascript">
+		//PPT 30 ES6对函数的扩展
+
+		//新增的箭头函数
+		//语法规则：参数 => 函数体  或  (参数) => {函数体}
+		//优点：可减少冗余的代码，节省空间，避免this指向错误
+		//如果箭头函数没有参数或需要多个参数时，就使用一个圆括号代表参数部分
+
+		//ES5的写法
+		var max = function(a,b){
+			return a>b?a:b;
+		};
+		max(2,3);//3
+
+		//ES6的写法
+		var max = (a,b) => a>b?a:b;
+		max(a,b);
+
+		//没有参数和有多个参数的情况下，需要使用小括号来表示参数，如果有多条语句则需要有大括号表示函数体
+
+		//ES6的写法
+		var foo = (num1,num2) => {
+			if(num1>num2){
+				return num1*2;
+			}else{
+				return num2*2;
+			}
+		};
+
+		//ES5的写法
+		var foo = function(num1,num2){
+			if(num1>num2){
+				return num1*2;
+			}else{
+				return num2*2;
+			}
+		}
+
+		//箭头函数可以与变量解构结合使用
+		const full = ({first,last}) => last+''+first;
+		full({first:"Ming",last:"Li"});
+		//上面等同于
+		function full({first,last}){
+			return last+''+first;
+		}
+		full({first:"Ming",last:"Li"});
+
+		//箭头函数的注意事项
+		//函数内的this是与函数定义时所在的对象绑定，而不是使用时所在的对象（避免this缺陷）
+		//大括号被解释为代码块，所以如果箭头函数直接返回一个对象，需在对象外面加上括号
+
+		//ES5this缺陷
+		var point = {
+		    x:0,
+		    y:0,
+		    moveTo:function (x,y) {
+		        //内部嵌套函数
+		        function moveToX() {
+		            this.x = x;//this绑定到了哪里？
+		        }
+		        //内部嵌套函数
+		        function moveToY() {
+		            this.y = y;//this绑定到了哪里？
+		        }
+		        moveToX();
+		        moveToY();
+		    }
+		};
+		point.moveTo(2,2);
+		console.log(point);
+
+		//ES5解决this缺陷--通过软绑定
+		var point = {
+		    x:0,
+		    y:0,
+		    moveTo:function (x,y) {
+		        var that = this;//关键的一行，软绑定
+		        //内部嵌套函数
+		        function moveToX() {
+		            that.x = x;//this改为that
+		        }
+		        //内部嵌套函数
+		        function moveToY() {
+		            that.y = y;//this绑定到了哪里？
+		        }
+		        moveToX();
+		        moveToY();
+		    }
+		};
+		point.moveTo(2,2);
+		console.log(point);
+
+		//ES6解决this缺陷
+		var point = {
+		    x:0,
+		    y:0,
+		    moveTo:function (x,y) {
+		        //内部嵌套函数
+		        var moveToX = ()=>this.x=x;
+		        //内部嵌套函数
+		        var moveToY = ()=>this.y=y;
+		        moveToX();
+		        moveToY();
+		    }
+		};
+		point.moveTo(2,2);
+		console.log(point);
+
+		//箭头函数没有自己的this，不能用call()、apply()、bind()这些方法去改变this的指向
+		function foo() {
+		    return () => {
+		        return () => {
+		            return () => {
+		                console.log('id:', this.id);
+		            };
+		        };
+		    };
+		}
+		var f = foo.call({id: 1});
+		var t1 = f.call({id: 2})()(); // id: 1
+		var t2 = f().call({id: 3})(); // id: 1
+		var t3 = f()().call({id: 4}); // id: 1
+
+		//ES6对函数参数默认值的扩展
+
+		//ES5中不能直接为函数的参数指定默认值，需要通过 || 来实现
+		var sum = function(a,b,c){
+			b = b || 4;
+			c = c || 5;
+			return a+b+c;
+		}
+		console.log(sum(1,2,3));//1+2+3
+		console.log(sum(1,2));//1+2+5
+		console.log(sum(1));//1+4+5
+
+		//ES6允许为函数的参数设置默认值
+		//注意事项
+		//带默认值的参数变量是默认声明的，所以函数体内不能再用let或const重复声明
+		//参数一般有顺序，有默认值的参数应是尾参数，这样可以使有默认值的用默认值，没有默认值的用传递的值
+		var sum = function(a,b=4,c=5){
+			return a+b+c;
+		}
+		console.log(sum(1,2,3));//1+2+3
+		console.log(sum(1,2));//1+2+5
+		console.log(sum(1));//1+4+5
+		console.log(sum(1,0,0));
+
+		function foo(x = 5){
+			let x = 1;//报错
+			const x = 2;//报错
+		}
+
+		//ES6中的Rest与Spread操作符
+
+		//...Rest 剩余操作符
+		//相当于合并若干参数为一个数组，主要用于函数定义时，代替 arguments，解决arguments的弊端
+
+		function f(...y){
+			console.log(y);
+		}
+		f("a","b","c");//["a","b","c"]
+
+		//...Spread 扩展操作符 相当于解数组为分散的参数，主要用于函数调用时，...Rest的逆运算
+
+		function f(x,...y){
+		    console.log(x,y);
+		}
+		f("a",...["b","c"]);//等价于f("a","b","c");
+		f("a");//输出 "a",[]
+		f();//输出 undefined,[]
+
+	</script>
+</head>
+<body>
+
+</body>
+</html>
